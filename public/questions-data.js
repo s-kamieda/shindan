@@ -2468,9 +2468,9 @@ window.__QUESTIONS__ = [
       "d": "ヘモクロマトーシス",
       "e": "Fits-Hugh-Curtis 症候群"
     },
-    "answer": "",
+    "answer": "a",
     "multi": false,
-    "explanation": "※この問題は解答・解説が原資料に収録されていません。",
+    "explanation": "うっ血性肝硬変Fontan術後症候群（Fontan-associated liver disease：FALD）〔日内会誌　113：120～126，2024〕\n参考症例：画像診断 42巻12号 pp.1114-1115",
     "category": "消化器（肝・胆・膵・脾）"
   },
   {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "rad-diag-cache-20260709-y2325";
+const CACHE_NAME = "rad-diag-cache-20260709-q51";
 const STATIC_ASSETS = [
   "./",
   "./index.html",
