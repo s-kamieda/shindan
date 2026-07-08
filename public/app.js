@@ -670,6 +670,39 @@ function buildSearchIndex(question) {
     .toLowerCase();
 }
 
+// 「2025-43」「2025年Q43」「2025」「Q43」のような年度・問題番号の入力を解釈する。
+// 該当しない入力なら空配列を返し、通常のキーワード検索にフォールバックする。
+function findQuestionsByNumberQuery(term) {
+  const t = term
+    .replace(/[！-～]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xfee0))
+    .replace(/　/g, " ")
+    .trim();
+
+  // 年度＋問題番号（例: 2025-43 / 2025 43 / 2025年43 / 2025年Q43）
+  let m = t.match(/^(\d{4})\s*年?\s*[-/.,、，:：\s]?\s*[qQ問]?\s*(\d{1,3})\s*(?:問目?|番)?$/);
+  if (m) {
+    const year = Number(m[1]);
+    const num = Number(m[2]);
+    return QUESTIONS.filter((q) => q.year === year && q.num === num);
+  }
+
+  // 年度のみ（例: 2025 / 2025年）
+  m = t.match(/^(\d{4})\s*年?$/);
+  if (m) {
+    const year = Number(m[1]);
+    return QUESTIONS.filter((q) => q.year === year);
+  }
+
+  // 問題番号のみ（例: Q43 / 問43 / 43番）→ 全年度から同番号
+  m = t.match(/^[qQ問]\s*(\d{1,3})\s*(?:問目?|番)?$/) || t.match(/^(\d{1,3})\s*(?:問目?|番)$/);
+  if (m) {
+    const num = Number(m[1]);
+    return QUESTIONS.filter((q) => q.num === num);
+  }
+
+  return [];
+}
+
 function getQuestionImages(question) {
   if (!question) return [];
   const fallbackAlt = `${question.year}年 Q${question.num} 図`;
@@ -1998,7 +2031,12 @@ async function doSearch() {
   }
   output.innerHTML = '<div class="empty">検索中...</div>';
   const normalized = term.toLowerCase();
-  const questionResults = QUESTIONS.filter((question) => buildSearchIndex(question).includes(normalized));
+  const numberResults = findQuestionsByNumberQuery(term);
+  const seen = new Set(numberResults.map((question) => question.id));
+  const textResults = QUESTIONS.filter(
+    (question) => !seen.has(question.id) && buildSearchIndex(question).includes(normalized)
+  );
+  const questionResults = numberResults.concat(textResults);
   const memoResults = await searchMemos(term);
   renderSearchResults(questionResults, memoResults, term);
 }
