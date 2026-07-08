@@ -1,0 +1,38 @@
+{
+  "id": "./index.html",
+  "name": "放射線診断専門医試験 問題集",
+  "short_name": "診断専門医",
+  "description": "放射線診断専門医試験の学習に向けた問題演習アプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f5f4",
+  "theme_color": "#0f9e99",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "apple-touch-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

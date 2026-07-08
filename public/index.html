@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f9e99">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="診断専門医">
+<meta name="app-build" content="2026-07-08 診断専門医2025">
+<title>放射線診断専門医試験 問題集</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png" sizes="180x180">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div id="pg-home" class="page with-nav">
+  <div class="topbar">
+    <span class="topbar-title">放射線診断専門医試験 問題集</span>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="btn-backup" title="バックアップ管理">📁</button>
+    </div>
+  </div>
+  <div id="runtime-banner" class="runtime-banner hidden"></div>
+  <div class="scroll-area">
+    <div class="inner">
+      <div class="home-title">
+        <p id="home-subtitle">2025年 計100問</p>
+      </div>
+
+      <div class="top-cards">
+        <button class="exam-card" id="exam-card" title="タップして受験日を変更">
+          <div class="tc-label">🚩 あなたの受験日</div>
+          <div class="tc-main" id="exam-date-main">-</div>
+          <div class="tc-sub" id="exam-countdown"></div>
+        </button>
+        <div class="status-card">
+          <div class="tc-label">📈 総正解率</div>
+          <div class="tc-main" id="home-accuracy">-</div>
+          <div class="tc-sub" id="home-progress">-</div>
+        </div>
+      </div>
+
+      <div id="reco-action" class="reco-action"></div>
+
+      <div class="home-card">
+        <div class="hc-head"><span class="hc-icon">🔁</span>復習する</div>
+        <div class="mode-grid">
+          <button class="mode-btn srs-mode-btn" id="btn-srs-today">
+            <span class="mode-icon">📅</span>
+            <div>
+              <div class="mode-name">今日の復習</div>
+              <div class="mode-desc" id="srs-today-desc">忘却曲線で今が適期の問題</div>
+            </div>
+            <span class="srs-badge hidden" id="srs-today-badge">0</span>
+          </button>
+          <button class="mode-btn srs-mode-btn" id="btn-srs-ease">
+            <span class="mode-icon">⚡</span>
+            <div>
+              <div class="mode-name">試験直前</div>
+              <div class="mode-desc" id="srs-ease-desc">弱点を苦手な順に総ざらい</div>
+            </div>
+          </button>
+        </div>
+        <div class="ov-grid" id="home-overview"></div>
+      </div>
+
+      <div class="home-card">
+        <div class="hc-head"><span class="hc-icon">🆕</span>新しく進める</div>
+        <div class="mode-grid" id="new-mode-grid">
+          <button class="mode-btn" id="btn-all">
+            <span class="mode-icon">📚</span>
+            <div>
+              <div class="mode-name">全問まとめて</div>
+              <div class="mode-desc" id="all-btn-desc">ランダムに出題</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="home-card">
+        <div class="hc-head"><span class="hc-icon">📚</span>年度別に解く</div>
+        <div class="year-scroll" id="year-grid"></div>
+      </div>
+
+      <div class="home-card">
+        <div class="hc-head"><span class="hc-icon">🗂️</span>カテゴリ別に解く</div>
+        <div id="cat-grid"></div>
+      </div>
+
+      <div class="home-card">
+        <div class="hc-head"><span class="hc-icon">📉</span>弱点カテゴリ</div>
+        <div id="weak-cats"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-quiz" class="page hidden">
+  <div class="topbar">
+    <span class="topbar-title" id="quiz-title">問題</span>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="btn-pause">中断</button>
+      <button class="tb-btn" id="btn-quiz-home">ホーム</button>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="inner">
+      <div class="quiz-header">
+        <span class="q-counter" id="q-counter">1 / 1</span>
+        <div class="prog-wrap">
+          <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        </div>
+        <span class="q-score" id="q-score-live">✓ 0</span>
+      </div>
+
+      <div class="card">
+        <div class="q-badges" id="q-badges"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="q-media hidden" id="q-media"></div>
+        <div class="choices" id="choices"></div>
+        <div id="feedback" class="feedback hidden"></div>
+        <div id="exp-area" class="exp-box hidden">
+          <div class="exp-label">解説</div>
+          <div id="exp-text"></div>
+        </div>
+        <div id="srs-rating-area" class="srs-rating-area hidden">
+          <p class="srs-rating-q">この問題の習熟度は？</p>
+          <div class="srs-rating-btns">
+            <button class="srs-rate-btn rate-easy" id="btn-rate-2">✓ 完璧に覚えていた</button>
+            <button class="srs-rate-btn rate-hard" id="btn-rate-1">△ なんとか正解</button>
+            <button class="srs-rate-btn rate-forgot" id="btn-rate-0">✗ ほぼ忘れていた</button>
+          </div>
+          <div class="srs-pool-note" id="srs-pool-note"></div>
+        </div>
+
+        <div id="memo-area" class="memo-box hidden">
+          <div class="memo-header">
+            <span class="memo-label">学習メモ</span>
+            <span id="memo-status" class="memo-status"></span>
+          </div>
+          <div class="template-row">
+            <button class="template-chip" data-template="full">テンプレート</button>
+            <button class="template-chip" data-template="diff">鑑別</button>
+            <button class="template-chip" data-template="trap">ひっかけ</button>
+            <button class="template-chip" data-template="memory">覚え方</button>
+            <button class="template-chip" data-template="next">次回確認点</button>
+          </div>
+          <div id="memo-rendered" class="memo-rendered hidden" title="タップして編集"></div>
+          <textarea id="memo-text" class="memo-textarea hidden" placeholder="学習メモを記入してください..."></textarea>
+          <div id="memo-imgs" class="memo-imgs"></div>
+          <div class="memo-actions">
+            <label class="memo-add-btn">画像追加<input type="file" id="memo-file-input" accept="image/*" multiple></label>
+            <span class="memo-hint">Ctrl+V / 貼り付けでも追加できます</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-footer">
+        <button class="btn btn-ghost hidden" id="btn-prev">← 前へ</button>
+        <button class="btn btn-primary" id="btn-submit" disabled>回答する</button>
+        <button class="btn btn-primary hidden" id="btn-next">次へ →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-result" class="page hidden">
+  <div class="topbar">
+    <span class="topbar-title">セッション結果</span>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="btn-result-home">ホーム</button>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="inner">
+      <div class="result-hero">
+        <div class="score-circle-wrap">
+          <svg width="130" height="130" viewBox="0 0 130 130">
+            <circle class="sc-track" cx="65" cy="65" r="55"></circle>
+            <circle class="sc-fill" id="sc-fill" cx="65" cy="65" r="55" stroke-dasharray="345.4" stroke-dashoffset="345.4"></circle>
+          </svg>
+          <div class="score-inner">
+            <div class="score-pct" id="res-pct">0%</div>
+            <div class="score-sub">正解率</div>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-cell"><div class="stat-val" id="res-correct">0</div><div class="stat-lbl">正解</div></div>
+        <div class="stat-cell"><div class="stat-val" id="res-total">0</div><div class="stat-lbl">問題数</div></div>
+        <div class="stat-cell"><div class="stat-val" id="res-time">0:00</div><div class="stat-lbl">所要時間</div></div>
+      </div>
+      <div class="result-actions">
+        <button class="btn btn-ghost" id="btn-result-home2">ホームへ</button>
+        <button class="btn btn-primary" id="btn-retry">不正解を再挑戦</button>
+      </div>
+      <div class="section-label">不正解問題 (<span id="wrong-count">0</span>問)</div>
+      <div id="wrong-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-stats" class="page with-nav hidden">
+  <div class="topbar">
+    <span class="topbar-title">学習統計</span>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="btn-stats-home">ホーム</button>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="inner stats-inner">
+      <div class="ov-grid" id="ov-grid"></div>
+      <div class="section-label">年度別正解率</div>
+      <div id="yr-breakdown"></div>
+      <div class="section-label">カテゴリ別正解率</div>
+      <div id="cat-breakdown"></div>
+      <div class="section-label">最近のセッション</div>
+      <div id="hist-list"></div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-search" class="page with-nav hidden">
+  <div class="topbar">
+    <span class="topbar-title">問題・メモ検索</span>
+    <div class="topbar-actions">
+      <button class="tb-btn" id="btn-search-home">ホーム</button>
+    </div>
+  </div>
+  <div class="scroll-area">
+    <div class="inner">
+      <div class="search-bar-wrap">
+        <input type="text" id="search-input" class="search-input" placeholder="キーワードを入力...">
+        <button id="btn-do-search" class="btn btn-primary search-go-btn">検索</button>
+      </div>
+      <div id="search-results"></div>
+    </div>
+  </div>
+</div>
+
+<nav id="bottom-nav" class="bottom-nav">
+  <button class="bn-btn active" id="bn-home"><span class="bn-icon">🏠</span><span>ホーム</span></button>
+  <button class="bn-btn" id="bn-stats"><span class="bn-icon">📋</span><span>学習記録</span></button>
+  <button class="bn-btn" id="bn-search"><span class="bn-icon">🔍</span><span>検索</span></button>
+</nav>
+
+<div id="modal-bg" class="modal-bg hidden">
+  <div class="modal">
+    <h2 id="modal-title">モード選択</h2>
+    <button class="modal-opt" id="modal-seq">
+      <strong>順番に解く</strong><span>1問目から順番に出題</span>
+    </button>
+    <button class="modal-opt" id="modal-rand">
+      <strong>ランダム</strong><span>シャッフルして出題</span>
+    </button>
+    <button class="modal-opt" id="modal-rand10">
+      <strong>10問チャレンジ</strong><span>ランダムに10問</span>
+    </button>
+    <button class="modal-cancel" id="modal-cancel">キャンセル</button>
+  </div>
+</div>
+
+<div id="srs-modal-bg" class="modal-bg hidden">
+  <div class="modal">
+    <h2 id="srs-modal-title">弱点集中</h2>
+    <p id="srs-modal-info" class="modal-copy"></p>
+    <button class="modal-opt" id="srs-modal-20">
+      <strong>20問</strong><span>上位20問に絞って復習</span>
+    </button>
+    <button class="modal-opt" id="srs-modal-50">
+      <strong>50問</strong><span>上位50問をまとめて</span>
+    </button>
+    <button class="modal-opt" id="srs-modal-all">
+      <strong>全件</strong><span>対象すべて（上限100問）</span>
+    </button>
+    <button class="modal-cancel" id="srs-modal-cancel">キャンセル</button>
+  </div>
+</div>
+
+<div id="exam-modal-bg" class="modal-bg hidden">
+  <div class="modal">
+    <h2>受験日を設定</h2>
+    <p class="modal-copy">ホームのカウントダウンに使われます。</p>
+    <input type="date" id="exam-date-input" class="date-input">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="exam-cancel">キャンセル</button>
+      <button class="btn btn-primary" id="exam-save">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="backup-modal-bg" class="modal-bg hidden">
+  <div class="modal">
+    <h2>バックアップ管理</h2>
+    <p class="modal-copy">学習履歴、SRS、メモ、画像をまとめて書き出し・復元できます。</p>
+    <button class="modal-opt" id="btn-export-data">
+      <strong>エクスポート</strong><span>現在の学習データを JSON で保存</span>
+    </button>
+    <button class="modal-opt" id="btn-import-data">
+      <strong>インポート</strong><span>バックアップ JSON から復元</span>
+    </button>
+    <button class="modal-cancel" id="btn-backup-close">閉じる</button>
+    <input type="file" id="backup-import-input" class="hidden" accept="application/json">
+  </div>
+</div>
+
+<div id="confirm-modal-bg" class="modal-bg hidden">
+  <div class="modal">
+    <h2 id="confirm-title">確認</h2>
+    <p id="confirm-message" class="modal-copy"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="confirm-cancel">キャンセル</button>
+      <button class="btn btn-primary" id="confirm-ok">続行</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-zone" class="toast-zone" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+window.__LEGACY_MEMOS__ = window.__LEGACY_MEMOS__ || [];
+</script>
+<script src="legacy-memos.js"></script>
+<script>
+if (window.location.protocol === "file:") {
+  document.write('<script src="questions-data.js"><\/script>');
+}
+</script>
+<script src="app.js" defer></script>
+</body>
+</html>

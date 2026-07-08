@@ -1,0 +1,5 @@
+# ローカル開発・バックアップ用（GitHubには含めない）
+public/_backup_*/
+public/_devserver.ps1
+public/.claude/
+.claude/
