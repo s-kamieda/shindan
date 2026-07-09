@@ -108,9 +108,9 @@
       "d": "medulloblastoma",
       "e": "diffuse midline glioma"
     },
-    "answer": "",
+    "answer": "b",
     "multi": false,
-    "explanation": "割問でした。neuro専門の先生に聞いてみたところ、どれも非典型的で選びきれないとおっしゃっていました。",
+    "explanation": "割問。閉塞性水頭症＋第4脳室内〜後頭蓋窩の腫瘤であり、ependymoma vs medulloblastomaとなる。第4脳室内から下方へ“鋳型状・可塑的”に進展している感じがあるので、bとしているが正しい正答がわからない。",
     "category": "中枢神経（脳・脊髄）"
   },
   {
@@ -146,9 +146,9 @@
       "d": "前立腺癌骨転移",
       "e": "コレステロール肉芽腫"
     },
-    "answer": "",
+    "answer": "c",
     "multi": false,
-    "explanation": "※この問題は解答・解説が原資料に収録されていません。",
+    "explanation": "骨性に膨隆し、内部がすりガラス状に見えるため、cとしていますが正解か不明。コレステロール肉芽腫も錐体尖部にでき、顔面違和感や三叉神経症状を起こす。",
     "category": "頭頸部"
   },
   {
@@ -1467,9 +1467,9 @@
       "d": "血   液",
       "e": "脂   肪"
     },
-    "answer": "",
+    "answer": "b",
     "multi": false,
-    "explanation": "※この問題は解答・解説が原資料に収録されていません。",
+    "explanation": "超音波の伝搬速度\n空気：約330 m/s\n脂肪：約1450 m/s\n水：約1520 m/s 前後\n血液：約1570 m/s\n筋肉：約1580 m/s",
     "category": "医学物理学"
   },
   {
